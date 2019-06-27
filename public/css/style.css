@@ -1,0 +1,13 @@
+form
+{
+    display: inline
+}
+form button
+{
+    background: transparent;
+    padding:0px;
+    border:0px;
+}
+form button i{
+    color: #337ab7;
+}
