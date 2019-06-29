@@ -85,15 +85,17 @@ class TasksController extends Controller
         foreach ($lines as $line) {
             $rows[] = str_getcsv($line,';');
         }
+
+
+        dd($rows);
         
         $header = array_shift($rows);
 
         foreach ($rows as $row) {
-            $row = array_combine($header, $row);
 
             Task::create([
-                'title' => $row['title'],
-                'description' => $row['description'],
+                'title' => $row[0],
+                'description' => $row[1],
             ]);
 
         }

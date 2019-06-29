@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <h3>My tasks</h3>
     <a href="{{ route('tasks.create')}}" class="btn btn-success">Create</a>
     <a href="{{ route('tasks.import')}}" class="btn btn-success">Import</a>
@@ -12,6 +12,7 @@
                     <tr>
                         <td>ID</td>
                         <td>Title</td>
+                        <td>Description</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -21,6 +22,8 @@
                     <tr>
                         <td>{{$task->id}}</td>
                         <td>{{$task->title}}</td>
+                        <td>{{Str::limit($task->description, 150)}}</td>
+                        <td></td>
                         <td>
                             <a href="{{route('tasks.show', $task->id)}}">
                                 <i class="glyphicon glyphicon-eye-open"></i>
