@@ -3,6 +3,7 @@
 @section('content')
 
 @include('errors')
+@include('textEditor')
 
 <div class="container">
     <h3>Edit task # - {{$task->id}}</h3>
@@ -20,4 +21,5 @@
         </div>
     </div>
 </div>
+
 @endsection

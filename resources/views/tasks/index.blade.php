@@ -5,6 +5,7 @@
     <h3>My tasks</h3>
     <a href="{{ route('tasks.create')}}" class="btn btn-success">Create</a>
     <a href="{{ route('tasks.import')}}" class="btn btn-success">Import</a>
+    <a href="{{ route('tasks.export') }}" class="btn btn-success">Export CSV</a>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <table class="table">
@@ -13,6 +14,7 @@
                         <td>ID</td>
                         <td>Title</td>
                         <td>Description</td>
+                        <td>Image</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -22,7 +24,7 @@
                     <tr>
                         <td>{{$task->id}}</td>
                         <td>{{$task->title}}</td>
-                        <td>{{Str::limit($task->description, 150)}}</td>
+                        <td>{!! Str::limit($task->description, 150) !!}</td>
                         <td></td>
                         <td>
                             <a href="{{route('tasks.show', $task->id)}}">

@@ -30,4 +30,6 @@ Route::get('tasks/import', 'TasksController@import')->name('tasks.import');
 
 Route::post('tasks/import', 'TasksController@handleImport')->name('tasks.handleImport');
 
+Route::get('taksk/export', 'TasksController@Export')->name('tasks.export');
+
 Route::resource('tasks', 'TasksController');

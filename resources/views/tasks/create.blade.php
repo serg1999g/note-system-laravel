@@ -3,6 +3,7 @@
 @section('content')
 
 @include('errors')
+@include('textEditor')
 
 <div class="container">
     <h3>Create task</h3>

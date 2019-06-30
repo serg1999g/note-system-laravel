@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Task;
 use App\Http\requests\createTaskRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Arr;
 
 
 class TasksController extends Controller
@@ -78,27 +79,53 @@ class TasksController extends Controller
 
         $file = $request->file('file');
         $csvData = file_get_contents($file);
-        //dd($csvData);
         $lines = explode(PHP_EOL, $csvData);
         $rows = array();
 
         foreach ($lines as $line) {
-            $rows[] = str_getcsv($line,';');
+            $rows[] = str_getcsv($line, ';');
         }
 
-
-        dd($rows);
-        
-        $header = array_shift($rows);
+        $i = 0;
 
         foreach ($rows as $row) {
 
-            Task::create([
+            if ((!isset($row[0])) && (!isset($row[1]))) {
+                $row[0] = null;
+                $row[1] = null;
+            }
+
+            $rows[$i] = ([
                 'title' => $row[0],
                 'description' => $row[1],
             ]);
-
+            $i++;
         }
+
+        unset($rows[count($rows)-1]);
+
+        $task = new Task;
+        $task->insert($rows);
+
         return redirect()->route('tasks.index');
+    }
+
+    public function export()
+    {
+            $table = Task::all();
+            $output='';
+            foreach ($table as $row) {
+                $rows = $row->toArray();
+                $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
+                $output.=  implode(";", $rows);
+                $output.="\n";
+            }
+            $headers = array(
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
+            );
+
+            return response(rtrim($output, "\n"), 200, $headers);
+
     }
 }
