@@ -27,7 +27,21 @@ class TasksController extends Controller
 
     public function store(createTaskRequest $request)
     {
-        Task::create($request->all());
+
+        $imageFile =file('image');
+
+
+        $myTask = new Task;
+        $myTask->title=$request->title;
+        $myTask->description=$request->description;
+        if(isset($imageFile)){
+            $path = $request->$imageFile->store('uploads', 'public');
+            $myTask->image=$path;
+        }
+
+        $myTask->save();
+
+
 
         return redirect()->route('tasks.index');
     }
@@ -79,7 +93,7 @@ class TasksController extends Controller
 
         $file = $request->file('file');
         $csvData = file_get_contents($file);
-        $lines = explode(PHP_EOL, $csvData);
+        $lines = explode("\n", $csvData);
         $rows = array();
 
         foreach ($lines as $line) {
@@ -112,20 +126,22 @@ class TasksController extends Controller
 
     public function export()
     {
-            $table = Task::all();
-            $output='';
-            foreach ($table as $row) {
-                $rows = $row->toArray();
-                $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
-                $output.=  implode(";", $rows);
-                $output.="\n";
-            }
-            $headers = array(
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
-            );
+        $table = Task::all();
+        $output='';
 
-            return response(rtrim($output, "\n"), 200, $headers);
+        foreach ($table as $row) {
+            $rows = $row->toArray();
+            $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
+            $output.=  implode(";", $rows);
+            $output.="\n";
+        }
+
+        $headers = array(
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
+        );
+
+        return response(rtrim($output, "\n"), 200, $headers);
 
     }
 }

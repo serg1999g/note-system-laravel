@@ -11,3 +11,14 @@ form button {
 form button i {
     color: #337ab7;
 }
+
+.img {
+    width: 100px;
+    height: 100px;
+}
+
+.img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -16,6 +16,7 @@
                 <textarea name="description" id="" cols="30" rows="10" class="form-control">{{$task->description}}</textarea>
                 <br>
                 <button class="btn btn-warning">Submit</button>
+                <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
             </div>
             {!! Form::close() !!}
         </div>

@@ -24,8 +24,12 @@
                     <tr>
                         <td>{{$task->id}}</td>
                         <td>{{$task->title}}</td>
-                        <td>{!! Str::limit($task->description, 150) !!}</td>
-                        <td></td>
+                        <td>{!! Str::limit($task->description, 200) !!}</td>
+                        <td class="img">
+                            @isset($task->image)
+                            <img src="{{ asset('/storage/' . $task->image )}}" alt="">
+                            @endisset
+                        </td>
                         <td>
                             <a href="{{route('tasks.show', $task->id)}}">
                                 <i class="glyphicon glyphicon-eye-open"></i>

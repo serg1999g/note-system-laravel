@@ -12,6 +12,7 @@
 <body>
     @yield('content')
 
+    <script src="{{asset('js/otherComponents/jquery-3.3.1.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
 </body>
 </html>
