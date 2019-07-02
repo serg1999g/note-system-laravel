@@ -11,11 +11,11 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <td>ID</td>
-                        <td>Title</td>
-                        <td>Description</td>
-                        <td>Image</td>
-                        <td>Action</td>
+                        <td class="head-table-style">ID</td>
+                        <td class="head-table-style">Title</td>
+                        <td class="head-table-style">Description</td>
+                        <td class="head-table-style">Image</td>
+                        <td class="head-table-style">Action</td>
                     </tr>
                 </thead>
 
@@ -29,7 +29,9 @@
 
                                 @isset($task->image)
                                     @foreach($task->image as $img)
-                                        <img src="{{ asset('/storage/' . $img->images)}}" alt="">
+                                        <div class="wrap-img">
+                                            <img src="{{ asset('/storage/' . $img->images)}}" alt="">
+                                        </div>
                                     @endforeach
                                 @endisset
 

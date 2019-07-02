@@ -72,3 +72,52 @@ form button i {
 .show-back {
     margin-top: 20px;
 }
+
+.tox-notifications-container{
+    display: none;
+}
+
+
+/*------------------------ TABLE ------------------------*/
+
+.id {
+    width: 5%;
+}
+
+.title {
+    width: 10%;
+}
+
+.description {
+    width: 40%;
+}
+
+.img {
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.wrap-img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+.head-table-style {
+    font-weight: bold;
+}
+
+thead {
+    background-color: #d7e4e2;
+}
+
+table {
+    margin-top: 20px;
+    /*border: 1px solid #ddd;*/
+}
+
+/*td:not(:last-child) {*/
+/*    border-right: 1px solid #ddd;*/
+/*}*/
+

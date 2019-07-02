@@ -24,7 +24,7 @@
                 @foreach($task->image as $img)
                     <div class="wrapper-image">
                         <div class="delete">
-                            <a href="">&#10006;</a>
+                            <button id="{{ $img->id }}}">&#10006;</button>
                         </div>
                         <img src="{{ asset('/storage/' . $img->images)}}" class="img-edit" alt="">
                     </div>
