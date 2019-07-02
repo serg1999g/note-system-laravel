@@ -17,16 +17,19 @@
                 <br>
                 <button class="btn btn-warning">Submit</button>
                 <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
-                <button class="btn btn-success add-block-image">Add image</button>
-
-            </div>
-
-            <div class="wrapper">
-                <div class="wrapper-input-images">
-                    {!! Form::file('image') !!}
-                </div>
             </div>
             {!! Form::close() !!}
+
+            <div class="wrapper">
+                @foreach($task->image as $img)
+                    <div class="wrapper-image">
+                        <div class="delete">
+                            <a href="">&#10006;</a>
+                        </div>
+                        <img src="{{ asset('/storage/' . $img->images)}}" class="img-edit" alt="">
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </div>

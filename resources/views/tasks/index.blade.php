@@ -22,15 +22,17 @@
                 <tbody>
                     @foreach($tasks as $task)
                     <tr>
-                        <td>{{$task->id}}</td>
-                        <td>{{$task->title}}</td>
-                        <td>{!! Str::limit($task->description, 200) !!}</td>
+                        <td class="id">{{$task->id}}</td>
+                        <td class="title">{{$task->title}}</td>
+                        <td class="description">{!! Str::limit($task->description, 200) !!}</td>
                         <td class="img">
-                            @isset($task->image)
-                                @foreach($task->image as $img)
-                            <img src="{{ asset('/storage/' . $img->images)}}" alt="">
-                                @endforeach
-                            @endisset
+
+                                @isset($task->image)
+                                    @foreach($task->image as $img)
+                                        <img src="{{ asset('/storage/' . $img->images)}}" alt="">
+                                    @endforeach
+                                @endisset
+
                         </td>
                         <td>
                             <a href="{{route('tasks.show', $task->id)}}">

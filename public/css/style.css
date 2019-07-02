@@ -31,3 +31,44 @@ form button i {
 .wrapper-input-images {
     margin-top: 10px;
 }
+
+.wrapper {
+    margin-top: 30px;
+    display: flex;
+}
+
+.wrapper-image  {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin-right: 10px;
+}
+
+.delete {
+    font-size: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.delete a {
+    color: #000;
+    text-decoration: none;
+}
+
+.delete:hover {
+    background-color: rgb(189, 218, 255);
+    transition: 0.2s;
+}
+
+.wrapper-image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.show-back {
+    margin-top: 20px;
+}
