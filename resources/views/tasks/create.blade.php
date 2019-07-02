@@ -18,12 +18,12 @@
                 <br>
                 <button class="btn btn-success">Submit</button>
                 <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
+                <button class="btn btn-success add-block-image">Add image</button>
             </div>
 
             <div class="wrapper">
                 <div class="wrapper-input-images">
-                    {!! Form::file('image') !!}
-{{--                    <input type="file" name="image" class="image-input">--}}
+                    {!! Form::file('image-1') !!}
                 </div>
             </div>
 

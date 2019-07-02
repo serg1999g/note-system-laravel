@@ -27,7 +27,9 @@
                         <td>{!! Str::limit($task->description, 200) !!}</td>
                         <td class="img">
                             @isset($task->image)
-                            <img src="{{ asset('/storage/' . $task->image )}}" alt="">
+                                @foreach($task->image as $img)
+                            <img src="{{ asset('/storage/' . $img->images)}}" alt="">
+                                @endforeach
                             @endisset
                         </td>
                         <td>

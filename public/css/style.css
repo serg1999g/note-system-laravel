@@ -17,8 +17,17 @@ form button i {
     height: 100px;
 }
 
-.img img{
+.img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.image-input {
+
+    margin-top: 10px;
+}
+
+.wrapper-input-images {
+    margin-top: 10px;
 }

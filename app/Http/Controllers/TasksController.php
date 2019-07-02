@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Task;
+use App\Image;
 use App\Http\requests\createTaskRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Arr;
@@ -27,21 +28,28 @@ class TasksController extends Controller
 
     public function store(createTaskRequest $request)
     {
-
-        $imageFile =file('image');
-
-
         $myTask = new Task;
         $myTask->title=$request->title;
         $myTask->description=$request->description;
-        if(isset($imageFile)){
-            $path = $request->$imageFile->store('uploads', 'public');
-            $myTask->image=$path;
-        }
-
         $myTask->save();
 
+        $taskId =$myTask->id;
+        $files = [];
+        for ($i=1; $i <= 5; $i++) {
+            $imageFile = $request->file('image-'. $i);
 
+            if(!isset($imageFile)){
+                break;
+            }
+
+            $files[] = [
+                'task_id' => $taskId,
+                'images' => $imageFile->store($taskId, 'public')
+            ];
+        }
+
+        $image = new Image;
+        $image->insert($files);
 
         return redirect()->route('tasks.index');
     }
