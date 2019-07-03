@@ -18,7 +18,6 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="file">Select a file to import</label>
-
                             {!! Form::file('file') !!}
                         </div>
                         <div class="form-group">

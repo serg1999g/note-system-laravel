@@ -28,6 +28,8 @@ Route::delete('tasks/{id}/destroy', 'TasksController@destroy')->name('tasks.dest
 
 Route::get('tasks/import', 'TasksController@import')->name('tasks.import');
 
+Route::delete('image/{id}/destroy', 'TasksController@DeleteImage')->name('image.destroy');
+
 Route::post('tasks/import', 'TasksController@handleImport')->name('tasks.handleImport');
 
 Route::get('tasks/export', 'TasksController@Export')->name('tasks.export');

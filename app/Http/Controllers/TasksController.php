@@ -79,13 +79,27 @@ class TasksController extends Controller
     {
         $myTask = Task::find($id);
 
+
         return view('tasks.show', ['task' => $myTask]);
     }
 
     public function destroy($id)
     {
         Task::find($id)->delete();
+
         return redirect()->route('tasks.index');
+    }
+
+    public function DeleteImage($id)
+    {
+
+        $test = Image::find($id)->images;
+
+        Image::where('id', $id)->delete();
+
+        $path = public_path()."/../storage/app/public/".$test;
+
+        unlink($path);
     }
 
     public function import()

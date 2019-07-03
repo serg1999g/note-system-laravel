@@ -114,10 +114,11 @@ thead {
 
 table {
     margin-top: 20px;
-    /*border: 1px solid #ddd;*/
 }
 
-/*td:not(:last-child) {*/
-/*    border-right: 1px solid #ddd;*/
-/*}*/
+.table {
+    border-bottom: 1px solid #ddd;
+}
+
+
 

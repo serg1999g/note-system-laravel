@@ -4,9 +4,10 @@ $.ajaxSetup({
     }
 });
 
-
 $(function () {
 
+
+    // Adding pictures
     let $wrapperImages = $('.wrapper-input-images'),
         $btnAddImage = $('.add-block-image');
 
@@ -24,4 +25,23 @@ $(function () {
     });
 
 
+    // Delete images
+    let $DeleteImage = $('.delete-image');
+
+    $DeleteImage.on('click', function (e) {
+        e.preventDefault();
+        $(this).closest(".wrapper-image").remove();
+        let id = this.id;
+        console.log(id);
+        let path = '../../image/'+id+'/destroy';
+
+        $.ajax({
+            url: path,
+            type: "DELETE",
+            data: id,
+            success: function () {
+
+            },
+        });
+    });
 });

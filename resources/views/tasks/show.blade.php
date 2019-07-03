@@ -16,9 +16,8 @@
                    </div>
                @endforeach
            </div>
-           <a href="{{route('tasks.index')}}" class="btn btn-success show-back">Back</a>
+            <a href="{{route('tasks.index')}}" class="btn btn-success show-back">Back</a>
        </div>
    </div>
-    
 </div>
 @endsection

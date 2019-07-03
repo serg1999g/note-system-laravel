@@ -20,17 +20,12 @@
                 <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
                 <button class="btn btn-success add-block-image">Add image</button>
             </div>
-
             <div class="wrapper">
                 <div class="wrapper-input-images">
                     {!! Form::file('image-1') !!}
                 </div>
             </div>
-
             {!! Form::close() !!}
-
-{{--                <img class="img-fluid" src="{{ asset('/storage/' . $path) }}" alt="">--}}
-
         </div>
     </div>
 </div>
