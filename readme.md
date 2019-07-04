@@ -1,3 +1,18 @@
+<h1 align="center">READ ME!<br>
+follow the installation instructions</h1>  
+
+
+<ol>
+    <li>git clone</li>
+    <li>composer install</li>
+    <li>type .env.example > .env</li>
+	<li>php artisan key:generate</li>
+	<li>editing .env</li>
+	<li>php artisan migrate</li>
+	<li>php artisan storage:link</li>
+  </ol>
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
