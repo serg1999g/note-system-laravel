@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class createTaskRequest extends FormRequest
+class createCsvFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,7 @@ class createTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'description' => 'required',
-//            'image-.*'=>'array:nullable|image',
-            'image-1'=>'nullable|image',
-            'image-2'=>'nullable|image',
-            'image-3'=>'nullable|image',
-            'image-4'=>'nullable|image',
-            'image-5'=>'nullable|image',
+            'file' => 'required|file|mimes:csv,txt',
         ];
     }
 }

@@ -15,7 +15,7 @@ $(function () {
     $btnAddImage.on('click', function (event) {
         event.preventDefault();
         if(count === 5){
-        $btnAddImage.addClass('hide');
+            $btnAddImage.addClass('hide');
             return;
         }
         count++;

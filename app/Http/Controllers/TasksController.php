@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Task;
 use App\Image;
 use App\Http\requests\createTaskRequest;
+use App\Http\requests\createCsvFileRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Arr;
 
@@ -35,6 +36,7 @@ class TasksController extends Controller
 
         $taskId =$myTask->id;
         $files = [];
+
         for ($i=1; $i <= 5; $i++) {
             $imageFile = $request->file('image-'. $i);
 
@@ -61,13 +63,8 @@ class TasksController extends Controller
         return view('tasks.edit', ['task' => $myTask]);
     }
 
-    public function update(Request $request, $id)
+    public function update(createTaskRequest $request, $id)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required'
-        ]);
-
         $myTask = Task::find($id);
         $myTask->fill($request->all());
         $myTask->save();
@@ -78,7 +75,6 @@ class TasksController extends Controller
     public function show($id)
     {
         $myTask = Task::find($id);
-
 
         return view('tasks.show', ['task' => $myTask]);
     }
@@ -92,13 +88,12 @@ class TasksController extends Controller
 
     public function DeleteImage($id)
     {
-
-        $test = Image::find($id)->images;
-
+// Remove images from the database
+        $imageId = Image::find($id)->images;
         Image::where('id', $id)->delete();
 
-        $path = public_path()."/../storage/app/public/".$test;
-
+// Remove images from the directory
+        $path = public_path()."/../storage/app/public/".$imageId;
         unlink($path);
     }
 
@@ -107,11 +102,8 @@ class TasksController extends Controller
         return view('tasks.import');
     }
 
-    public function handleImport(Request $request)
+    public function handleImport(createCsvFileRequest $request)
     {
-        $this->validate($request, [
-            'file' => 'required',
-        ]);
 
         $file = $request->file('file');
         $csvData = file_get_contents($file);
@@ -164,6 +156,5 @@ class TasksController extends Controller
         );
 
         return response(rtrim($output, "\n"), 200, $headers);
-
     }
 }
