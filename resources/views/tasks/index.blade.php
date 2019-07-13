@@ -24,7 +24,7 @@
                     <tr>
                         <td class="id">{{$task->id}}</td>
                         <td class="title">{{$task->title}}</td>
-                        <td class="description">{!! Str::limit($task->description, 200) !!}</td>
+                        <td class="description">{!! Str::limit($task->description, 100) !!}</td>
                         <td class="img">
 
                                 @isset($task->image)

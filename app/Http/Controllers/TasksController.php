@@ -60,7 +60,7 @@ class TasksController extends Controller
     {
         $myTask = Task::find($id);
 
-        return view('tasks.edit', ['task' => $myTask]);
+       return view('tasks.edit', ['task' => $myTask]);
     }
 
     public function update(createTaskRequest $request, $id)
@@ -146,8 +146,10 @@ class TasksController extends Controller
         foreach ($table as $row) {
             $rows = $row->toArray();
             $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
-            $output.=  implode(";", $rows);
+            $styles = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $rows);
+            $output.=  implode(";", $styles);
             $output.="\n";
+            $output = strip_tags($output);
         }
 
         $headers = array(

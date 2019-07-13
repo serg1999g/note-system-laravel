@@ -18,6 +18,7 @@
                 <button class="btn btn-warning">Submit</button>
                 <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
             </div>
+
             {!! Form::close() !!}
 
             <div class="wrapper">
