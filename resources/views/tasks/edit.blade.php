@@ -9,7 +9,8 @@
     <h3>Edit task # - {{$task->id}}</h3>
     <div class="row">
         <div class="col-md-12">
-            {!! Form::open(['route' => ['tasks.update', $task->id], 'method'=>'PUT']) !!}
+            {!! Form::open(['route' => ['tasks.update', $task->id], 'method'=>'PUT', 'enctype' => 'multipart/form-data']) !!}
+            {{ csrf_field() }}
             <div class="form-groi">
                 <input type="text" class="form-control" name="title" value="{{$task->title}}">
                 <br>
@@ -17,8 +18,14 @@
                 <br>
                 <button class="btn btn-warning">Submit</button>
                 <a href="{{route('tasks.index')}}" class="btn btn-success">Back</a>
+                <button class="btn btn-success add-block-image">Add image</button>
             </div>
 
+            <div class="wrapper">
+                <div class="wrapper-input-images">
+                    {!! Form::file('image-'.(count($task->image)+1) ) !!}
+                </div>
+            </div>
             {!! Form::close() !!}
 
             <div class="wrapper">

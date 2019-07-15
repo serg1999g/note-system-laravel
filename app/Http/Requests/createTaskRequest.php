@@ -24,7 +24,7 @@ class createTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
+            'title' => 'required|max:20',
             'description' => 'required',
 //            'image-.*'=>'array:nullable|image',
             'image-1'=>'nullable|image',

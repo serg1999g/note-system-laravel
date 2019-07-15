@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Task;
 use App\Image;
-use App\Http\requests\createTaskRequest;
-use App\Http\requests\createCsvFileRequest;
+use App\Http\Requests\createTaskRequest;
+use App\Http\Requests\createCsvFileRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 
 class TasksController extends Controller
@@ -18,6 +19,10 @@ class TasksController extends Controller
     public function index()
     {
         $tasks = Task::all();
+
+        foreach($tasks as $task){
+            $task->limit = Str::limit($task->description, 200);
+        }
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -29,12 +34,12 @@ class TasksController extends Controller
 
     public function store(createTaskRequest $request)
     {
-        $myTask = new Task;
-        $myTask->title=$request->title;
-        $myTask->description=$request->description;
-        $myTask->save();
+        $task = new Task;
+        $task->title=$request->title;
+        $task->description=$request->description;
+        $task->save();
 
-        $taskId =$myTask->id;
+        $taskId =$task->id;
         $files = [];
 
         for ($i=1; $i <= 5; $i++) {
@@ -58,25 +63,44 @@ class TasksController extends Controller
 
     public function edit($id)
     {
-        $myTask = Task::find($id);
+        $task = Task::find($id);
 
-       return view('tasks.edit', ['task' => $myTask]);
+       return view('tasks.edit', ['task' => $task]);
     }
 
     public function update(createTaskRequest $request, $id)
     {
-        $myTask = Task::find($id);
-        $myTask->fill($request->all());
-        $myTask->save();
+        $task = Task::find($id);
+        $task->fill($request->all());
+        $task->save();
+
+        $taskId =$task->id;
+        $files = [];
+
+        for ($i=1; $i <= 5; $i++) {
+            $imageFile = $request->file('image-'. $i);
+
+            if(!isset($imageFile)){
+                continue;
+            }
+
+            $files[] = [
+                'task_id' => $taskId,
+                'images' => $imageFile->store($taskId, 'public')
+            ];
+        }
+
+        $image = new Image;
+        $image->insert($files);
 
         return redirect()->route('tasks.index');
     }
 
     public function show($id)
     {
-        $myTask = Task::find($id);
+        $task = Task::find($id);
 
-        return view('tasks.show', ['task' => $myTask]);
+        return view('tasks.show', ['task' => $task]);
     }
 
     public function destroy($id)
@@ -104,7 +128,6 @@ class TasksController extends Controller
 
     public function handleImport(createCsvFileRequest $request)
     {
-
         $file = $request->file('file');
         $csvData = file_get_contents($file);
         $lines = explode("\n", $csvData);
@@ -121,6 +144,7 @@ class TasksController extends Controller
             if ((!isset($row[0])) && (!isset($row[1]))) {
                 $row[0] = null;
                 $row[1] = null;
+
             }
 
             $rows[$i] = ([
@@ -129,8 +153,6 @@ class TasksController extends Controller
             ]);
             $i++;
         }
-
-        unset($rows[count($rows)-1]);
 
         $task = new Task;
         $task->insert($rows);
@@ -146,16 +168,17 @@ class TasksController extends Controller
         foreach ($table as $row) {
             $rows = $row->toArray();
             $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
-            $styles = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $rows);
-            $output.=  implode(";", $styles);
-            $output.="\n";
+            $output.=  implode(";", $rows);
             $output = strip_tags($output);
+            $output.="\n";
+
         }
 
         $headers = array(
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
         );
+//         $csv_text_converted = mb_convert_encoding($output, "CP1251", "UTF-8");
 
         return response(rtrim($output, "\n"), 200, $headers);
     }
