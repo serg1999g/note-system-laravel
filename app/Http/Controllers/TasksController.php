@@ -10,6 +10,7 @@ use App\Http\Requests\createCsvFileRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use function PHPSTORM_META\elementType;
 
 
 class TasksController extends Controller
@@ -162,24 +163,32 @@ class TasksController extends Controller
 
     public function export()
     {
+
         $table = Task::all();
-        $output='';
 
-        foreach ($table as $row) {
-            $rows = $row->toArray();
-            $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
-            $output.=  implode(";", $rows);
-            $output = strip_tags($output);
-            $output.="\n";
+        if ($table->count() > 0) {
+            $output='';
 
+            foreach ($table as $row) {
+                $rows = $row->toArray();
+                $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
+                $output.=  implode(";", $rows);
+                $output = strip_tags($output);
+                $output.="\n";
+            }
+
+            $headers = array(
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
+            );
+
+            $response = response(rtrim($output, "\n"), 200, $headers);
+
+            return $response;
+
+        } else {
+            return redirect()->route('tasks.index');
         }
 
-        $headers = array(
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
-        );
-//         $csv_text_converted = mb_convert_encoding($output, "CP1251", "UTF-8");
-
-        return response(rtrim($output, "\n"), 200, $headers);
     }
 }
