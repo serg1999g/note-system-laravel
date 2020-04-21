@@ -1,15 +1,21 @@
 <h1 align="center">READ ME!<br>
 follow the installation instructions</h1>  
 
-
 <ol>
+    <li>cd /var/www</li>
+    <li>sudo mkdir *имя папки*</li>
+    <li>sudo chown {{YOUR_USER}}:{{YOUR_USER}} *имя папки*</li>
     <li>git clone</li>
-    <li>composer install</li>
-    <li>type .env.example > .env</li>
-	<li>php artisan key:generate</li>
-	<li>editing .env</li>
-	<li>php artisan migrate</li>
-	<li>php artisan storage:link</li>
+    <li>git clone *ссылка на репозиторий* *имя папки*</li>
+    <li>cp .env.example .env</li>
+	<li>sudo chmod 777 -R storage/</li>
+	<li>sudo chmod 775 -R bootstap/</li>
+	<li>composer install</li>
+	<li>npm install</li>
+    <li>php artisan key:generate</li>
+    <li>php artisan migrate</li>
+    <li>php artisan storage:link</li>
+    <li>npm run watch</li>
   </ol>
 
 
