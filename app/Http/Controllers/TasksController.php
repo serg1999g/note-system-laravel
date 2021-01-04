@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Task;
 use App\Image;
 use App\Http\Requests\createTaskRequest;
 use App\Http\Requests\createCsvFileRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use function PHPSTORM_META\elementType;
 
 
 class TasksController extends Controller
@@ -19,13 +17,13 @@ class TasksController extends Controller
 
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::query()->paginate(20);
 
         foreach($tasks as $task){
             $task->limit = Str::limit($task->description, 200);
         }
 
-        return view('tasks.index', ['tasks' => $tasks]);
+        return view('tasks.index', compact('tasks'));
     }
 
     public function create()
@@ -64,14 +62,14 @@ class TasksController extends Controller
 
     public function edit($id)
     {
-        $task = Task::find($id);
+        $task = Task::query()->find($id);
 
        return view('tasks.edit', ['task' => $task]);
     }
 
-    public function update(createTaskRequest $request, $id)
+    public function update(createTaskRequest $request, int $id): RedirectResponse
     {
-        $task = Task::find($id);
+        $task = Task::query()->find($id);
         $task->fill($request->all());
         $task->save();
 
@@ -97,7 +95,7 @@ class TasksController extends Controller
         return redirect()->route('tasks.index');
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $task = Task::find($id);
 
@@ -111,7 +109,7 @@ class TasksController extends Controller
         return redirect()->route('tasks.index');
     }
 
-    public function DeleteImage($id)
+    public function DeleteImage(int $id)
     {
 // Remove images from the database
         $imageId = Image::find($id)->images;
@@ -132,7 +130,7 @@ class TasksController extends Controller
         $file = $request->file('file');
         $csvData = file_get_contents($file);
         $lines = explode("\n", $csvData);
-        $rows = array();
+        $rows = [];
 
         foreach ($lines as $line) {
             $rows[] = str_getcsv($line, ';');
@@ -161,34 +159,30 @@ class TasksController extends Controller
         return redirect()->route('tasks.index');
     }
 
+
     public function export()
     {
+        $headers = [
+            'id',
+            'title',
+            'description'
+        ];
 
-        $table = Task::all();
+        $file = fopen('php://output', 'w');
 
-        if ($table->count() > 0) {
-            $output='';
+        header("Content-Disposition:attachment; filename=ExportFileName.csv");
+        header('Content-Type:text/csv');
 
-            foreach ($table as $row) {
-                $rows = $row->toArray();
-                $rows = Arr::except($rows, ['id', 'created_at', 'updated_at']);
-                $output.=  implode(";", $rows);
-                $output = strip_tags($output);
-                $output.="\n";
-            }
+        fputcsv($file, $headers, ';');
 
-            $headers = array(
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="ExportFileName.csv"',
-            );
+        Task::query()
+            ->select($headers)
+            ->chunk(1000, function ($records) use ($file) {
+                foreach ($records as $record) {
+                    fputcsv($file, $record->toArray(), ';');
+                }
+            });
 
-            $response = response(rtrim($output, "\n"), 200, $headers);
-
-            return $response;
-
-        } else {
-            return redirect()->route('tasks.index');
-        }
-
+        fclose($file);
     }
 }
