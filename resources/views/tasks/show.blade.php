@@ -10,7 +10,7 @@
            <h3>{{$task->title}}</h3>
            <p>{!! Str::limit($task->description) !!}</p>
            <div class="wrapper">
-               @foreach($task->image as $img)
+               @foreach($task->images as $img)
                    <div class="wrapper-image">
                        <img src="{{ asset('/storage/' . $img->images)}}" class="img-edit" alt="">
                    </div>

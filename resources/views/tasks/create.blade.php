@@ -9,8 +9,8 @@
     <h3>Create task</h3>
     <div class="row">
         <div class="col-md-12">
-            {!! Form::open(['route' => 'tasks.store', 'enctype' => 'multipart/form-data'])!!}
-            {{ csrf_field() }}
+            <form action="{{route('tasks.store')}}" method="POST" enctype="multipart/form-data">
+                @csrf
             <div class="form-groi">
                 <input type="text" class="form-control" name="title" value="{{old('title')}}">
                 <br>
@@ -22,10 +22,10 @@
             </div>
             <div class="wrapper">
                 <div class="wrapper-input-images">
-                    {!! Form::file('image-1') !!}
+                    <input type="file" name="image-1">
                 </div>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 </div>

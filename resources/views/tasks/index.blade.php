@@ -27,8 +27,8 @@
                         <td class="description">{!! $task->limit !!}</td>
                         <td class="img">
 
-                                @isset($task->image)
-                                    @foreach($task->image as $img)
+                                @isset($task->images)
+                                    @foreach($task->images as $img)
                                         <div class="wrap-img">
                                             <img src="{{ asset('/storage/' . $img->images)}}" alt="">
                                         </div>
@@ -43,9 +43,11 @@
                             <a href="{{ route('tasks.edit', $task->id) }}">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>
-                            {!! Form::open(['method'=> 'DELETE', 'route' => ['tasks.destroy', $task->id]]) !!}
-                            <button onclick="return confirm('Are you sure?')"><i class="glyphicon glyphicon-remove"></i></button>
-                            {!! Form::close() !!}
+                            <form action="{{'tasks.destroy', $task->id}}">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Are you sure?')"><i class="glyphicon glyphicon-remove"></i></button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

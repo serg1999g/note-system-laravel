@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use App\Task;
 use App\Image;
 use App\Http\Requests\createTaskRequest;
-use App\Http\Requests\createCsvFileRequest;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Http\Requests\CreateCsvFileRequest;
 use Illuminate\Support\Str;
 
 
 class TasksController extends Controller
 {
-    use ValidatesRequests;
-
-    public function index()
+    public function index(): Renderable
     {
         $tasks = Task::query()->paginate(20);
 
@@ -26,16 +24,16 @@ class TasksController extends Controller
         return view('tasks.index', compact('tasks'));
     }
 
-    public function create()
+    public function create(): Renderable
     {
         return view('tasks.create');
     }
 
-    public function store(createTaskRequest $request)
+    public function store(createTaskRequest $request): RedirectResponse
     {
-        $task = new Task;
-        $task->title=$request->title;
-        $task->description=$request->description;
+        $task = new Task();
+        $task->title        = $request->input('title');
+        $task->description  = $request->input('description');
         $task->save();
 
         $taskId =$task->id;
@@ -54,13 +52,13 @@ class TasksController extends Controller
             ];
         }
 
-        $image = new Image;
+        $image = new Image();
         $image->insert($files);
 
         return redirect()->route('tasks.index');
     }
 
-    public function edit($id)
+    public function edit($id): Renderable
     {
         $task = Task::query()->find($id);
 
@@ -89,34 +87,32 @@ class TasksController extends Controller
             ];
         }
 
-        $image = new Image;
+        $image = new Image();
         $image->insert($files);
 
         return redirect()->route('tasks.index');
     }
 
-    public function show(int $id)
+    public function show(int $id): Renderable
     {
-        $task = Task::find($id);
+        $task = Task::query()->find($id);
 
         return view('tasks.show', ['task' => $task]);
     }
 
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
-        Task::find($id)->delete();
+        Task::query()->find($id)->delete();
 
         return redirect()->route('tasks.index');
     }
 
     public function DeleteImage(int $id)
     {
-// Remove images from the database
-        $imageId = Image::find($id)->images;
-        Image::where('id', $id)->delete();
+        $imageId = Image::query()->find($id)->images;
+        Image::query()->where('id', $id)->delete();
 
-// Remove images from the directory
-        $path = public_path()."/../storage/app/public/".$imageId;
+        $path = public_path() . "/../storage/app/public/" . $imageId;
         unlink($path);
     }
 
@@ -125,7 +121,7 @@ class TasksController extends Controller
         return view('tasks.import');
     }
 
-    public function handleImport(createCsvFileRequest $request)
+    public function handleImport(CreateCsvFileRequest $request): RedirectResponse
     {
         $file = $request->file('file');
         $csvData = file_get_contents($file);
@@ -153,7 +149,7 @@ class TasksController extends Controller
             $i++;
         }
 
-        $task = new Task;
+        $task = new Task();
         $task->insert($rows);
 
         return redirect()->route('tasks.index');

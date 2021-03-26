@@ -9,8 +9,9 @@
     <h3>Edit task # - {{$task->id}}</h3>
     <div class="row">
         <div class="col-md-12">
-            {!! Form::open(['route' => ['tasks.update', $task->id], 'method'=>'PUT', 'enctype' => 'multipart/form-data']) !!}
-            {{ csrf_field() }}
+            <form action="{{route('tasks.update',$task->id)}}" method="POST" enctype="multipart/form-data">
+                @method('PUT')
+                @csrf
             <div class="form-groi">
                 <input type="text" class="form-control" name="title" value="{{$task->title}}">
                 <br>
@@ -23,18 +24,18 @@
 
             <div class="wrapper">
                 <div class="wrapper-input-images">
-                    {!! Form::file('image-'.(count($task->image)+1) ) !!}
+                    <input type="file" name='image-' . {{ count($task->images)+1 }}>
                 </div>
             </div>
-            {!! Form::close() !!}
+            </form>
 
             <div class="wrapper">
-                @foreach($task->image as $img)
+                @foreach($task->images as $image)
                     <div class="wrapper-image">
                         <div class="delete">
-                            <button class="delete-image" id="{{ $img->id }}" >&#10006;</button>
+                            <button class="delete-image" id="{{ $image->id }}" >&#10006;</button>
                         </div>
-                        <img src="{{ asset('/storage/' . $img->images)}}"   class="img-edit" alt="">
+                        <img src="{{ asset('/storage/' . $image->images)}}"   class="img-edit" alt="">
                     </div>
                 @endforeach
             </div>
