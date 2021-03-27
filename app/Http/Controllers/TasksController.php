@@ -9,6 +9,7 @@ use App\Image;
 use App\Http\Requests\createTaskRequest;
 use App\Http\Requests\CreateCsvFileRequest;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
 class TasksController extends Controller
@@ -156,29 +157,20 @@ class TasksController extends Controller
     }
 
 
-    public function export()
+    public function export(): BinaryFileResponse
     {
-        $headers = [
-            'id',
-            'title',
-            'description'
-        ];
+        $headers = ['id', 'title', 'description'];
+        $tasks = Task::query()->get();
 
-        $file = fopen('php://output', 'w');
+        file_put_contents(storage_path('app/tasks.csv'), '');
+        $handle = fopen(storage_path('app/tasks.csv'), 'w');
 
-        header("Content-Disposition:attachment; filename=ExportFileName.csv");
-        header('Content-Type:text/csv');
+        fputcsv($handle, $headers, ';');
 
-        fputcsv($file, $headers, ';');
+        foreach ($tasks as $task) {
+            fputcsv($handle, [$task->id, $task->title, $task->description], ';');
+        }
 
-        Task::query()
-            ->select($headers)
-            ->chunk(1000, function ($records) use ($file) {
-                foreach ($records as $record) {
-                    fputcsv($file, $record->toArray(), ';');
-                }
-            });
-
-        fclose($file);
+        return response()->download(storage_path('app/tasks.csv'));
     }
 }
