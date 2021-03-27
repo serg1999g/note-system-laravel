@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Task;
 use App\Image;
 use App\Http\Requests\createTaskRequest;
 use App\Http\Requests\CreateCsvFileRequest;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -33,6 +36,7 @@ class TasksController extends Controller
     public function store(createTaskRequest $request): RedirectResponse
     {
         $task = new Task();
+
         $task->title        = $request->input('title');
         $task->description  = $request->input('description');
         $task->save();
@@ -56,7 +60,7 @@ class TasksController extends Controller
         $image = new Image();
         $image->insert($files);
 
-        return redirect()->route('tasks.index');
+        return Redirect::route('tasks.index');
     }
 
     public function edit($id): Renderable
@@ -72,7 +76,7 @@ class TasksController extends Controller
         $task->fill($request->all());
         $task->save();
 
-        $taskId =$task->id;
+        $taskId = $task->id;
         $files = [];
 
         for ($i=1; $i <= 5; $i++) {
@@ -91,7 +95,7 @@ class TasksController extends Controller
         $image = new Image();
         $image->insert($files);
 
-        return redirect()->route('tasks.index');
+        return Redirect::route('tasks.index');
     }
 
     public function show(int $id): Renderable
@@ -101,20 +105,22 @@ class TasksController extends Controller
         return view('tasks.show', ['task' => $task]);
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
         Task::query()->find($id)->delete();
 
-        return redirect()->route('tasks.index');
+        return Redirect::route('tasks.index');
     }
 
-    public function DeleteImage(int $id)
+    public function DeleteImage(int $id): JsonResponse
     {
         $imageId = Image::query()->find($id)->images;
         Image::query()->where('id', $id)->delete();
 
         $path = public_path() . "/../storage/app/public/" . $imageId;
         unlink($path);
+
+        return Response::json(['success' => true], 200);
     }
 
     public function import()
@@ -153,7 +159,7 @@ class TasksController extends Controller
         $task = new Task();
         $task->insert($rows);
 
-        return redirect()->route('tasks.index');
+        return Redirect::route('tasks.index');
     }
 
 
@@ -171,6 +177,6 @@ class TasksController extends Controller
             fputcsv($handle, [$task->id, $task->title, $task->description], ';');
         }
 
-        return response()->download(storage_path('app/tasks.csv'));
+        return Response::download(storage_path('app/tasks.csv'));
     }
 }
