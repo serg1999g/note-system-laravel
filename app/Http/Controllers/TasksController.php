@@ -11,6 +11,7 @@ use App\Http\Requests\createTaskRequest;
 use App\Http\Requests\CreateCsvFileRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -165,11 +166,12 @@ class TasksController extends Controller
 
     public function export(): BinaryFileResponse
     {
+        Storage::disk('public')->put('test.csv', '');
+
         $headers = ['id', 'title', 'description'];
         $tasks = Task::query()->get();
 
-        file_put_contents(storage_path('app/tasks.csv'), '');
-        $handle = fopen(storage_path('app/tasks.csv'), 'w');
+        $handle = fopen(Storage::disk('public')->path('test.csv'), 'w');
 
         fputcsv($handle, $headers, ';');
 
@@ -177,6 +179,8 @@ class TasksController extends Controller
             fputcsv($handle, [$task->id, $task->title, $task->description], ';');
         }
 
-        return Response::download(storage_path('app/tasks.csv'));
+        fclose($handle);
+
+        return Response::download(storage_path('app/public/test.csv'));
     }
 }
